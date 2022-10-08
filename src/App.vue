@@ -22,11 +22,7 @@
 		},
 		data(){
 			return {
-				todos: [
-					{ id: '001', title: '吃饭1', done: true },
-					{ id: '002', title: '吃饭2', done: false },
-					{ id: '003', title: '吃饭3', done: true },
-				]
+				todos: JSON.parse(localStorage.getItem('todos')) || []
 			}
 		},
 		methods: {
@@ -53,6 +49,14 @@
 			// 清除所有已完成的
 			clearAllTodo(){
 				this.todos = this.todos.filter(item => !item.done)
+			}
+		},
+		watch: {
+			todos:{
+				deep: true,
+				handler(value){
+					localStorage.setItem('todos',JSON.stringify(value))
+				}
 			}
 		}
 	}
