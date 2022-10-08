@@ -1,28 +1,99 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+	<div id="root">
+		<div class="todo-container">
+			<div class="todo-wrap">
+				<HeaderVue :addTodo="addTodo"></HeaderVue>
+				<ListVue :todos="todos" :checkTodo="checkTodo" :deleteTodo="deleteTodo"></ListVue>
+				<FooterVue :todos="todos" :checkAllTodo="checkAllTodo" :clearAllTodo="clearAllTodo"></FooterVue>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+	import HeaderVue from './components/Header';
+	import ListVue from './components/List';
+	import FooterVue from './components/Footer';
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+	export default {
+		name: 'App',
+		components: {
+			HeaderVue,ListVue,FooterVue
+		},
+		data(){
+			return {
+				todos: [
+					{ id: '001', title: '吃饭1', done: true },
+					{ id: '002', title: '吃饭2', done: false },
+					{ id: '003', title: '吃饭3', done: true },
+				]
+			}
+		},
+		methods: {
+			// 添加信息
+			addTodo(todoObj){
+				this.todos.unshift(todoObj)
+			},
+			// 勾选or取消勾选
+			checkTodo(id){
+				this.todos.forEach(item => {
+					if(item.id === id) item.done = !item.done
+				})
+			},
+			// 删除一个数据
+			deleteTodo(id){
+				this.todos = this.todos.filter(item => item.id !== id)
+			},
+			// 全选or取消全选
+			checkAllTodo(done){
+				this.todos.forEach(item => {
+					item.done = done
+				})
+			},
+			// 清除所有已完成的
+			clearAllTodo(){
+				this.todos = this.todos.filter(item => !item.done)
+			}
+		}
+	}
 </script>
 
-<style lang="less">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style>
+	/*base*/
+	body {
+		background: #fff;
+	}
+	.btn {
+		display: inline-block;
+		padding: 4px 12px;
+		margin-bottom: 0;
+		font-size: 14px;
+		line-height: 20px;
+		text-align: center;
+		vertical-align: middle;
+		cursor: pointer;
+		box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+		border-radius: 4px;
+	}
+	.btn-danger {
+		color: #fff;
+		background-color: #da4f49;
+		border: 1px solid #bd362f;
+	}
+	.btn-danger:hover {
+		color: #fff;
+		background-color: #bd362f;
+	}
+	.btn:focus {
+		outline: none;
+	}
+	.todo-container {
+		width: 600px;
+		margin: 0 auto;
+	}
+	.todo-container .todo-wrap {
+		padding: 10px;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+	}
 </style>
