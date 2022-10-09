@@ -8,7 +8,7 @@
 	import { v4 as uuidv4 } from 'uuid'
 	export default {
 		name: 'Header',
-		props: ['addTodo'],
+		// props: ['addTodo'],
 		data(){
 			return {
 				title: ''
@@ -21,7 +21,8 @@
 				// 将用户的输入包装成一个todo对象
 				const todoObj = { id: uuidv4(), title: e.target.value, done: false }
 				// 将新输入的数据添加到app中
-				this.addTodo(todoObj)
+				// this.addTodo(todoObj)
+				this.$emit('addTodo',todoObj)
 				// 清空输入
 				this.title = ''
 			}
