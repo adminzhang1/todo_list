@@ -12,16 +12,16 @@
 	export default {
 		name: 'Item',
 		// 声明接收todoObj对象
-		props: ['todo','checkTodo','deleteTodo'],
+		props: ['todo'],
 		methods: {
 			// 勾选or取消勾选
 			handleCheck(id){
-				this.checkTodo(id)
+				this.$bus.$emit('checkTodo',id)
 			},
 			// 删除
 			handleDelete(id){
 				if(confirm('确定删除吗?')){
-					this.deleteTodo(id)
+					this.$bus.$emit('deleteTodo',id)
 				}
 			}
 		}

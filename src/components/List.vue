@@ -1,6 +1,6 @@
 <template>
 	<ul class="todo-main">
-		<ItemVue v-for="todoObj in todos" :key="todoObj.id" :todo="todoObj" :checkTodo="checkTodo" :deleteTodo="deleteTodo"></ItemVue>
+		<ItemVue v-for="todoObj in todos" :key="todoObj.id" :todo="todoObj"></ItemVue>
 	</ul>
 </template>
 
@@ -11,7 +11,7 @@
 		components: {
 			ItemVue
 		},
-		props: ['todos','checkTodo','deleteTodo']
+		props: ['todos']
 	}
 </script>
 
