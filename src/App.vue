@@ -11,6 +11,7 @@
 </template>
 
 <script>
+	import pubsub from 'pubsub-js'
 	import HeaderVue from './components/Header';
 	import ListVue from './components/List';
 	import FooterVue from './components/Footer';
@@ -37,7 +38,7 @@
 				})
 			},
 			// 删除一个数据
-			deleteTodo(id){
+			deleteTodo(_,id){
 				this.todos = this.todos.filter(item => item.id !== id)
 			},
 			// 全选or取消全选
@@ -49,7 +50,13 @@
 			// 清除所有已完成的
 			clearAllTodo(){
 				this.todos = this.todos.filter(item => !item.done)
-			}
+			},
+			// 更新一个数据
+			updataTodo(id,title){
+				this.todos.forEach(item => {
+					if(item.id === id) item.title = title
+				})
+			},
 		},
 		watch: {
 			todos:{
@@ -61,10 +68,12 @@
 		},
 		mounted(){
 			this.$bus.$on('checkTodo',this.checkTodo)
-			this.$bus.$on('deleteTodo',this.deleteTodo)
+			this.$bus.$on('updataTodo',this.updataTodo)
+			this.pubId = pubsub.subscribe('deleteTodo',this.deleteTodo)
 		},
 		beforeDestroy(){
-			this.$bus.$off(['checkTodo','deleteTodo'])
+			this.$bus.$off(['checkTodo','updataTodo'])
+			pubsub.unsubscribe(this.pubId)
 		}
 	}
 </script>
@@ -90,6 +99,12 @@
 		color: #fff;
 		background-color: #da4f49;
 		border: 1px solid #bd362f;
+	}
+	.btn-edit{
+		color: #fff;
+		background-color: skyblue;
+		border: 1px solid rgb(103, 159, 180);
+		margin-right: 5px;
 	}
 	.btn-danger:hover {
 		color: #fff;

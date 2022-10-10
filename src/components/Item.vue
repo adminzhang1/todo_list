@@ -2,13 +2,22 @@
 	<li>
 		<label>
 			<input type="checkbox" :checked="todo.done" @change="handleCheck(todo.id)"/>
-			<span>{{ todo.title }}</span>
+			<span v-show="!todo.isEdit">{{ todo.title }}</span>
+			<input
+				v-show="todo.isEdit"
+				type="text"
+				:value="todo.title"
+				@blur="handleBlur(todo,$event)"
+				ref="inputTitle"
+			>
 		</label>
 		<button class="btn btn-danger" @click="handleDelete(todo.id)">删除</button>
+		<button class="btn btn-edit" @click="handleEdit(todo)" v-show="!todo.isEdit">编辑</button>
 	</li>
 </template>
 
 <script>
+	import pubsub from 'pubsub-js';
 	export default {
 		name: 'Item',
 		// 声明接收todoObj对象
@@ -21,8 +30,26 @@
 			// 删除
 			handleDelete(id){
 				if(confirm('确定删除吗?')){
-					this.$bus.$emit('deleteTodo',id)
+					// this.$bus.$emit('deleteTodo',id)
+					pubsub.publish('deleteTodo',id)
 				}
+			},
+			// 编辑
+			handleEdit(todo){
+				if(todo.hasOwnProperty('isEdit')){
+					todo.isEdit = true
+				}else{
+					this.$set(todo,'isEdit',true)
+				}
+				this.$nextTick(() => {
+					this.$refs.inputTitle.focus()
+				})
+			},
+			// 修改信息事件
+			handleBlur(todo,e){
+				todo.isEdit = false
+				if(!e.target.value.trim()) return alert('输入不能为空!')
+				this.$bus.$emit('updataTodo',todo.id,e.target.value)
 			}
 		}
 	}
